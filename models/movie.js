@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { messages } = require('../errors');
 
 const urlCheck = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/;
 
@@ -30,7 +31,7 @@ const movieSchema = new mongoose.Schema({
       validator(v) {
         return urlCheck.test(v);
       },
-      message: 'Введите ссылку!',
+      message: messages.app.notURL,
     },
   },
   trailerLink: {
@@ -40,7 +41,7 @@ const movieSchema = new mongoose.Schema({
       validator(v) {
         return urlCheck.test(v);
       },
-      message: 'Введите ссылку!',
+      message: messages.app.notURL,
     },
   },
   thumbnail: {
@@ -50,7 +51,7 @@ const movieSchema = new mongoose.Schema({
       validator(v) {
         return urlCheck.test(v);
       },
-      message: 'Введите ссылку!',
+      message: messages.app.notURL,
     },
   },
   owner: {

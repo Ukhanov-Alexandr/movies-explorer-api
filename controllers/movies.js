@@ -1,7 +1,7 @@
 const Movie = require('../models/movie');
-const NotFoundError = require('../errors/NotFoundError');
-const ValidationError = require('../errors/ValidationError');
-const ForbiddenError = require('../errors/ForbiddenError');
+const {
+  NotFoundError, ValidationError, ForbiddenError, messages,
+} = require('../errors');
 
 module.exports.getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
@@ -10,33 +10,7 @@ module.exports.getMovies = (req, res, next) => {
 };
 
 module.exports.createMovie = (req, res, next) => {
-  const {
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    thumbnail,
-    movieId,
-    nameRU,
-    nameEN,
-  } = req.body;
-  Movie.create({
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    thumbnail,
-    owner: req.user._id,
-    movieId,
-    nameRU,
-    nameEN,
-  })
+  Movie.create({ ...req.body, owner: req.user._id })
     .then((movieDocument) => {
       const movie = movieDocument.toObject();
       movie.owner = { _id: req.user._id };
@@ -47,17 +21,17 @@ module.exports.createMovie = (req, res, next) => {
 
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.id)
-    .orFail(new NotFoundError('Фильм с указанным _id не найден'))
+    .orFail(new NotFoundError(messages.movie.notFound))
     .then((movie) => {
       const ownerId = req.user._id;
       if (movie.owner.toString() === ownerId.toString()) {
-        return movie.delete().then(() => { res.json({ message: `Фильм ${movie._id} - успешно удалён` }); });
+        return movie.delete().then(() => { res.json({ message: messages.movie.deleted }); });
       }
-      throw new ForbiddenError('Вы не можете удалть чужой фильм!');
+      throw new ForbiddenError(messages.movie.forbidden);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new ValidationError('Переданы некорректные данные при удалении фильма'));
+        next(new ValidationError(messages.movie.validation));
         return;
       }
       next(err);

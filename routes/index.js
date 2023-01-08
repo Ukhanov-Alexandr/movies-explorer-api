@@ -4,7 +4,7 @@ const moviesRouter = require('./movies');
 const { createUser, login } = require('../controllers/users');
 const { signupValidate, loginValidate } = require('../middlewares/celebrate');
 const auth = require('../middlewares/auth');
-const NotFoundError = require('../errors/NotFoundError');
+const { NotFoundError, messages } = require('../errors');
 
 // routes.get('/crash-test', () => {
 //   setTimeout(() => {
@@ -16,6 +16,6 @@ routes.post('/signin', loginValidate, login);
 routes.use(auth);
 routes.use('/users', usersRouter);
 routes.use('/movies', moviesRouter);
-routes.use('/*', (req, res, next) => next(new NotFoundError('Запрашиваемый ресурс не найден')));
+routes.use('/*', (req, res, next) => next(new NotFoundError(messages.app.noPage)));
 
 module.exports = routes;
