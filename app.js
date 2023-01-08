@@ -1,23 +1,21 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
-require('dotenv').config();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const defaultErrorHandler = require('./errors/defaultErrorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { corsOptions } = require('./utils/constants');
+const { corsOptions, PORT, DB_URL } = require('./utils/constants');
 const routes = require('./routes/index');
 
-const { PORT = 3001 } = process.env;
 const app = express();
 
 app.use(helmet());
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb')
+mongoose.connect(DB_URL)
   .then(() => console.log('«Соединение с базой данных успешно»'))
   .catch((err) => console.log(err, '«Ошибка подключения к базе данных»'));
 app.use(requestLogger);

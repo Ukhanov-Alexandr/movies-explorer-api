@@ -72,6 +72,10 @@ module.exports.updateUser = (req, res, next) => {
         next(new NotFoundError('Пользователь с указанным _id не найден'));
         return;
       }
+      if (err.code === 11000) {
+        next(new ConflictError(`Пользователь с таким ${email} уже зарегистрирован`));
+        return;
+      }
       next(err);
     });
 };
