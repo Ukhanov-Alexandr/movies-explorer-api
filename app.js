@@ -18,7 +18,6 @@ const app = express();
 
 app.use(helmet());
 app.use(cors(corsOptions));
-app.use(rateLimit(rateLimitOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -34,6 +33,7 @@ async function connectToDb() {
 connectToDb();
 
 app.use(requestLogger);
+app.use(rateLimit(rateLimitOptions));
 app.use(routes);
 app.use(errorLogger);
 app.use(errors());

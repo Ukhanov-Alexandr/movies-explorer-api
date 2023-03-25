@@ -12,7 +12,7 @@ module.exports.corsOptions = {
 
 module.exports.rateLimitOptions = {
   message: 'Слишком много запросов',
-  max: 100,
+  max: 500,
 };
 
 const { PORT = 3000, DB_URL = 'mongodb://localhost:27017/moviesdblocal' } = process.env;
