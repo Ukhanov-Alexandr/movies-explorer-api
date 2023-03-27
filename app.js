@@ -4,13 +4,13 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
-const rateLimit = require('express-rate-limit');
+// const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
 // modules
 const defaultErrorHandler = require('./errors/defaultErrorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const {
-  corsOptions, rateLimitOptions, PORT, DB_URL,
+  corsOptions, PORT, DB_URL,
 } = require('./utils/constants');
 const routes = require('./routes');
 
@@ -33,7 +33,7 @@ async function connectToDb() {
 connectToDb();
 
 app.use(requestLogger);
-app.use(rateLimit(rateLimitOptions));
+// app.use(rateLimit(rateLimitOptions));
 app.use(routes);
 app.use(errorLogger);
 app.use(errors());
